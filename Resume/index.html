@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Your Portfolio</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=League+Spartan:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <h1>Create Your Portfolio</h1>
+    <label for="photoUpload" class="upload-btn">Upload Photo </label>
+    <input
+      type="file"
+      id="photoUpload"
+      accept="image/*"
+      style="display: none"
+    />
+
+    <form id="portfolioForm">
+      <label>Name:</label>
+      <input type="text" id="name" required />
+
+      <label>Title:</label>
+      <input type="text" id="title" required />
+
+      <label>About You:</label>
+      <textarea id="about" required></textarea>
+
+      <label>Education</label>
+      <textarea id="education" required></textarea>
+
+      <label>Skills (comma separated):</label>
+      <input type="text" id="skills" placeholder="HTML, CSS, JS" />
+
+      <label>Experience</label>
+      <textarea id="experience" required></textarea>
+
+      <label>Projects:</label>
+      <!-- <input type="text" id="projectTitle" /> -->
+
+      <div id="projectsContainer">
+        <div class="projectInput">
+          <input type="text" placeholder="Project Title" class="projectTitle" />
+          <textarea
+            placeholder="Project Description"
+            class="projectDescription"
+          ></textarea>
+        </div>
+      </div>
+      <button type="button" id="addProject">+ Add Another Project</button>
+
+      <button type="submit">Preview My Portfolio</button>
+    </form>
+
+    <script src="script.js"></script>
+  </body>
+</html>

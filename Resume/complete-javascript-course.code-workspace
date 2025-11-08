@@ -1,0 +1,16 @@
+{
+  "folders": [
+	{
+		"path": "../complete-javascript-course"
+	},
+	{
+		"path": "../social-proof-section-master"
+	},
+	{
+		"path": "."
+	}
+],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "Resume"
+  }
+}

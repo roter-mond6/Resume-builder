@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Your Portfolio</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=League+Spartan:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="portfolioPreview"></div>
+    <button id="downloadBtn">Download as PDF</button>
+
+    <script>
+      "use strict";
+
+      // helper: escape user text before inserting in innerHTML
+      function escapeHtml(str = "") {
+        return String(str)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+      }
+
+      // Safely parse stored data (use empty object fallback)
+      const raw = localStorage.getItem("portfolioData");
+      const data = raw ? JSON.parse(raw) : {};
+
+      const previewEl = document.getElementById("portfolioPreview");
+
+      // If no saved data, show friendly message and disable download
+      if (!data || !data.name) {
+        previewEl.innerHTML = `
+        <p>No portfolio data found. Please go back and fill the form first.</p>
+        <p><a href="index.html">Open the form</a></p>
+      `;
+        document.getElementById("downloadBtn").disabled = true;
+      } else {
+        // Build skills list safely
+        const skillsArr = Array.isArray(data.skills) ? data.skills : [];
+        const skillsHtml = skillsArr.length
+          ? `
+          <hr> <ul>${skillsArr
+            .map((s) => `<li>${escapeHtml(s)}</li>`)
+            .join("")}</ul>`
+          : "<p>No skills provided.</p>";
+
+        // Build projects safely
+        const projectsArr = Array.isArray(data.projects) ? data.projects : [];
+        const projectsHtml = projectsArr.length
+          ? projectsArr
+              .map(
+                (proj) => `
+                <hr>
+            <div class="project">
+             
+              <h4>${escapeHtml(proj.title || "")}</h4>
+              <p>${escapeHtml(proj.description || "")}</p>
+            </div>
+          `
+              )
+              .join("")
+          : "<p>No projects added.</p>";
+
+        // Photo (data.photoURL is a data URL string if user uploaded)
+        const photoHtml = data.photoURL
+          ? `<img src="${escapeHtml(data.photoURL)}" alt="${escapeHtml(
+              data.name
+            )}'s Photo" class="profile-photo" />`
+          : "";
+
+        // Inject final HTML
+        previewEl.innerHTML = `
+        <div class="preview-inner">
+          ${photoHtml}
+          <h1>${escapeHtml(data.name)}</h1>
+          <h2>${escapeHtml(data.title || "")}</h2>
+          <p>${escapeHtml(data.about || "")}</p>
+
+          <h3>Skills</h3>
+          ${skillsHtml}
+
+          <h3>Projects</h3>
+          ${projectsHtml}
+
+          <h3>Contact</h3>
+          <p>${escapeHtml(data.contactEmail || "")}</p>
+          <hr>
+        </div>
+      `;
+      }
+
+      // PDF download handler (no stray call)
+      document.getElementById("downloadBtn").addEventListener("click", () => {
+        const element = document.getElementById("portfolioPreview");
+        const options = {
+          margin: 10,
+          filename: `${
+            data && data.name ? data.name.replace(/\s+/g, "_") : "portfolio"
+          }.pdf`,
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        };
+        html2pdf().set(options).from(element).save();
+      });
+    </script>
+  </body>
+</html>
